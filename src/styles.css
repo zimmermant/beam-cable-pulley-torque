@@ -1,0 +1,87 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 6px 16px 6px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #111827;
+  background: #ffffff;
+}
+h1 { margin: 0; font-size: 20px; line-height: 1.2; font-weight: 600; }
+h2 { margin: 0 0 4px; font-size: 15px; line-height: 1.3; font-weight: 600; }
+
+/* ---- page layout ---------------------------------------------------------
+   The four diagrams and a reading bar, nothing else. The figure is sized to FIT, not to fill: the svg
+   keeps its viewBox's aspect ratio (preserveAspectRatio defaults to "meet"), so it is as large as
+   the window allows and centred in whatever is left over. The page therefore never scrolls at any
+   size, and src/interact.js already reads that letterboxing when it turns a pointer position into
+   viewBox units, so dragging lands in the right place however the window is shaped. */
+body { margin: 0; padding: 0; height: 100vh; overflow: hidden; }
+.stage { box-sizing: border-box; height: 100%; padding: 4px 8px; display: flex; flex-direction: column; }
+/* An absolutely positioned svg inside a relative box: a flex child sizing an svg by its own aspect
+   ratio is unreliable across browsers, and this is not. */
+.fig-fill { flex: 1 1 auto; position: relative; min-height: 0; min-width: 0; }
+#fig { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* The readings, in a slim bar under the figure. */
+.bar { flex: 0 0 auto; max-width: 740px; width: 100%; margin: 3px auto 0; padding: 1px 12px 2px;
+       border: 1px solid #d5dbe3; border-radius: 8px; background: #f9fafb; }
+/* A subscript is browser-default 83% of its parent, which at 15 px is 12.4 px -- close enough to the
+   12 px floor to be worth pinning rather than leaving to the browser. */
+#controls sub { font-size: 12px; line-height: 0; }
+
+/* ---- colours, the same values as COLORS in svg.js ---- */
+.c-load { color: #c53030; }
+.c-cable { color: #b7791f; }
+.c-pin { color: #2b6cb0; }
+
+/* ---- the figure's one interactive element: the handle at the tip of the force at D ----------
+   Every state it can be in is visible: at rest, hovered, grabbed and keyboard-focused. */
+#fig { touch-action: none; }
+#fig .load-handle { cursor: grab; transition: fill .08s, stroke-width .08s; }
+#fig .load-handle:hover { fill: #fed7d7; stroke-width: 4.6; }
+#fig .load-handle:focus { outline: none; }
+#fig .load-handle:focus-visible { stroke: #2b6cb0; stroke-width: 5.5; fill: #ebf8ff; }
+#fig.dragging .load-handle { cursor: grabbing; fill: #c53030; stroke-width: 5; }
+#fig.dragging { cursor: grabbing; }
+
+
+/* ---- the reading bar ----------------------------------------------------
+   No sliders: the figure IS the control, so the bar reads back the two numbers the drag changes and
+   lights a chip when the force is exactly straight down. Every pixel here comes off the figure --
+   the svg takes whatever height the bar leaves it -- so the bar stays one line wherever it can. */
+.ctl-head { font-size: 15px; line-height: 1.4; }
+.readout { font-variant-numeric: tabular-nums; display: inline-block; min-width: 2.2em; text-align: right; font-weight: 700; }
+/* The snap, visible and not merely felt: outlined while the force is off the weight, filled in while
+   it is on it -- the same change the outlined weight in the figure makes at the same moment. */
+.snap-label {
+  display: inline-block; margin-left: 6px; padding: 0 9px; border-radius: 10px; white-space: nowrap;
+  font-size: 13px; font-weight: 700; color: #9aa1ab; border: 1px solid #d5dbe3;
+  transition: background .1s, color .1s, border-color .1s;
+}
+.snap-label.on { background: #c53030; border-color: #c53030; color: #ffffff; }
+/* The pivot reading is words, not a number, so it needs room and no right alignment. */
+.readout.wide { min-width: 0; text-align: left; font-variant-numeric: normal; }
+
+/* ---- the pivot picker ----------------------------------------------------
+   The one button on the page. It has to show all four of the states it can be in -- resting,
+   hovered, pressed, keyboard-focused -- and a fifth that matters more than any of them: ARMED,
+   when the figure is listening for a click. Armed it goes solid in the pivot's own colour, which
+   is the colour of the dot that is about to appear, and the two left panels outline themselves to
+   say which half of the figure is listening. */
+.btn {
+  font: inherit; font-size: 14px; line-height: 1.2; margin-left: 8px; padding: 3px 10px;
+  color: #2d3748; background: #ffffff; border: 1px solid #b9c2cd; border-radius: 7px; cursor: pointer;
+  transition: background .1s, border-color .1s, color .1s, box-shadow .1s;
+}
+.btn:hover { background: #f1ecfb; border-color: #6b46c1; color: #4c2f98; }
+.btn:active { background: #e3d9f7; border-color: #553099; }
+.btn:focus { outline: none; }
+.btn:focus-visible { border-color: #6b46c1; box-shadow: 0 0 0 3px #6b46c155; }
+.btn.on { background: #6b46c1; border-color: #6b46c1; color: #ffffff; }
+.btn.on:hover { background: #5b39ab; border-color: #5b39ab; }
+.btn.quiet { color: #6b7280; }
+.btn.quiet:hover { color: #4c2f98; }
+/* While the picker is armed the whole figure says a click means a point, not a drag. */
+#fig.picking { cursor: crosshair; }
+#fig.picking .load-handle { cursor: crosshair; }

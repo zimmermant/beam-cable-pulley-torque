@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Torque about a pivot: beam held by a cable over a pulley</title>
+<!--INLINE_CSS-->
+</head>
+<body>
+<main class="stage" id="stage">
+<div class="fig-fill">
+<svg id="fig" viewBox="0 0 960 790" role="img" aria-label="Four diagrams of one beam. A horizontal beam runs from a pin in the wall at A to its free end at D, with a cable tied to it at B, taken up over a pulley at E on the ceiling and back down to a second tie at C; the weight that hung at D is left in outline, and the force at D can be dragged by the round handle at the arrow's tip. Beside and below it: the same beam as a single point carrying only the forces, the free-body diagram of the beam, and the four forces drawn tip to tail. Pick a pivot point on either diagram on the left and the free-body diagram shows what each force turns about it."></svg>
+</div>
+<section id="controls" class="bar" aria-label="The force at D, and the pivot">
+  <div class="ctl-head"><b>F<sub>D</sub></b> = <b id="f-readout" class="readout">200</b>&nbsp;lb
+    &nbsp; θ = <b id="dir-readout" class="readout">270</b>°
+    <span id="dir-snap" class="snap-label">straight down</span>
+    &nbsp; <b>pivot</b> <b id="pivot-readout" class="readout wide">none</b>
+    <button type="button" id="pick" class="btn">Pick a pivot point</button>
+    <button type="button" id="clear-pivot" class="btn quiet" hidden>Clear</button>
+  </div>
+  <p id="from-link" hidden></p>
+</section>
+</main>
+<!--INLINE_JS-->
+</body>
+</html>
